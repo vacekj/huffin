@@ -1,0 +1,5 @@
+#define function register(string memory name) public payable
+
+#define macro MAIN() = {
+    
+}
