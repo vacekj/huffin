@@ -1,0 +1,48 @@
+// Huff version of lil-ens by miguel piedrafita
+#define function register() payable returns ()
+#define function get() view returns (address)
+#define error AlreadyRegistered()
+
+#define macro ALREADY_REGISTERED() = takes (0) returns (0) {
+    __ERROR(AlreadyRegistered)   // [panic_error_selector]
+    0x00 mstore           // [panic_code]
+    0x24 0x00 revert
+}
+
+#define macro MAIN() = takes (1) returns (1) {
+    // Identify which function is being called.
+    0x00 calldataload 0xE0 shr          // [func_sig]
+
+    dup1 __FUNC_SIG(register) eq register jumpi
+    dup1 __FUNC_SIG(get) eq get jumpi
+
+    register:
+        REGISTER()
+    get:
+        GET()
+}
+
+#define macro REGISTER() = takes(0) returns(0) {
+    // load the caller into memory
+    caller 0x04 mstore
+    // hash the caller
+    0x04 0x14 sha3
+    // duplicate so that we save to storage the hash at the index of the hash
+    dup1
+    sstore
+
+    0x04 0x00 return
+}
+
+#define macro GET() = takes(0) returns(0) {
+    // load the caller into memory
+    caller 0x04 mstore
+    // hash the caller
+    0x04 0x14 sha3
+    // load the storage slot at the hashed caller onto the stack
+    sload
+    0x04 mstore
+
+    0x04 0x00 return
+}
+
