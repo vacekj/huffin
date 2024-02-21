@@ -1,4 +1,12 @@
+// Huff version of lil-ens by miguel piedrafita
 #define function register(string memory name) public payable
+#define error AlgeadyRegistered()
+
+#define macro ALREADY_REGISTERED() = takes (0) returns (0) {
+    __ERROR(PanicError)   // [panic_error_selector]
+    0x00 mstore           // [panic_code]
+    0x24 0x00 revert
+}
 
 #define macro MAIN() = {
     // Get the function selector
