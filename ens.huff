@@ -1,5 +1,22 @@
 #define function register(string memory name) public payable
 
 #define macro MAIN() = {
-    
+    // Get the function selector
+    0x00
+    calldataload
+    0xE0
+    shr
+
+    __FUNC_SIG(register) eq register jumpi
+
+    register:
+        REGISTER()
+}
+
+#define macro REGISTER() = takes(0) returns(0) {
+    caller
+    caller
+    sstore
+
+    0x00 0x00 return
 }
