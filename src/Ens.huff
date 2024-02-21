@@ -24,22 +24,23 @@
 
 #define macro REGISTER() = takes(0) returns(0) {
     // load the caller into memory
-    caller 0x04 mstore
+    caller 0x00 mstore
     // hash the caller
-    0x04 0x14 sha3
+    0x14 0x0c sha3
     // duplicate so that we save to storage the hash at the index of the hash
     dup1
     sstore
 
-    0x04 0x00 return
+    stop
 }
 
 #define macro GET() = takes(0) returns(0) {
     // load the caller into memory
-    caller 0x04 mstore
+    caller 0x00 mstore
     // hash the caller
-    0x04 0x14 sha3
-    // load the storage slot at the hashed caller onto the stack
+    0x14 0x0c sha3
+    // duplicate so that we save to storage the hash at the index of the hash
+    dup1
     sload
     0x04 mstore
 

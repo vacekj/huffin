@@ -10,6 +10,7 @@ contract EnsTest is Test {
     using stdStorage for StdStorage;
     /// @dev Address of the ens contract.
     Ens public ens;
+    address me = makeAddr("test");
 
     /// @dev Setup the testing environment.
     function setUp() public {
@@ -18,11 +19,13 @@ contract EnsTest is Test {
 
     /// @dev Ensure that you can set and get the value.
     function testRegister() public {
+        vm.prank(me);
         ens.register();
-    }
-
-    function testGet() public {
-        ens.register();
+        bytes32 storageSlot = vm.load(
+            address(ens),
+            bytes32(keccak256(abi.encodePacked(me)))
+        );
+        assertEq(storageSlot, bytes32(keccak256(abi.encodePacked(me))));
     }
 }
 
