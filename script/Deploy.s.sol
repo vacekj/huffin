@@ -5,7 +5,7 @@ import "foundry-huff/HuffDeployer.sol";
 import "forge-std/Script.sol";
 
 interface Ens {
-    function register() external payable;
+    function register(string memory name) external payable;
     function get() external view returns (address);
 }
 

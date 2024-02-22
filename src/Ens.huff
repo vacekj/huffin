@@ -1,6 +1,6 @@
 // Huff version of lil-ens by miguel piedrafita
 #define function register() payable returns ()
-#define function get() view returns (address)
+#define function get() view returns (bytes32)
 #define error AlreadyRegistered()
 
 #define macro ALREADY_REGISTERED() = takes (0) returns (0) {
@@ -23,27 +23,26 @@
 }
 
 #define macro REGISTER() = takes(0) returns(0) {
-    // load the caller into memory
-    caller 0x00 mstore
-    // hash the caller
-    0x14 0x0c sha3
-    // duplicate so that we save to storage the hash at the index of the hash
-    dup1
+    0x24 calldataload // [string_length]
+
+    0x44 0x80 
+    // [0x80 - dest in memory, 0x44 - offset, 0x24 - length]
+    calldatacopy
+    
+    0x80 
+    mload
+    caller
+
+    // [caller, string in bytes]
     sstore
 
     stop
 }
 
 #define macro GET() = takes(0) returns(0) {
-    // load the caller into memory
-    caller 0x00 mstore
-    // hash the caller
-    0x14 0x0c sha3
-    // duplicate so that we save to storage the hash at the index of the hash
-    dup1
-    sload
-    0x04 mstore
+    caller sload
+    0x00 mstore
 
-    0x04 0x00 return
+    0x20 0x00 return
 }
 

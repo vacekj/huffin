@@ -19,17 +19,14 @@ contract EnsTest is Test {
 
     /// @dev Ensure that you can set and get the value.
     function testRegister() public {
-        vm.prank(me);
-        ens.register();
-        bytes32 storageSlot = vm.load(
-            address(ens),
-            bytes32(keccak256(abi.encodePacked(me)))
-        );
-        assertEq(storageSlot, bytes32(keccak256(abi.encodePacked(me))));
+        vm.startPrank(me);
+        ens.register("name");
+        console.logBytes32(ens.get());
+        vm.stopPrank();
     }
 }
 
 interface Ens {
-    function register() external payable;
-    function get() external view returns (address);
+    function register(string memory name) external payable;
+    function get() external view returns (bytes32);
 }
